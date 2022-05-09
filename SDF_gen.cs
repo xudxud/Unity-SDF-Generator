@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEditor;
 
-/// Ref:
-/// 1. http://www.codersnotes.com/notes/signed-distance-fields/
-/// 2. https://shaderfun.com
-/// 3. https://zhuanlan.zhihu.com/p/337944099
+/// <summary>
+///   <para>Ref:</para>
+///   <para>1. http://www.codersnotes.com/notes/signed-distance-fields/</para>
+///   <para>2. https://shaderfun.com</para>
+///   <para>3. https://zhuanlan.zhihu.com/p/337944099</para>
+/// </summary>
 
 public class SDF_gen : MonoBehaviour
 {   

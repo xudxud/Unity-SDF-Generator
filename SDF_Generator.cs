@@ -1,5 +1,5 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 /// <summary>
 ///   <para>Ref:</para>
@@ -8,26 +8,72 @@ using UnityEditor;
 ///   <para>3. https://zhuanlan.zhihu.com/p/337944099</para>
 /// </summary>
 
-public class SDF_gen : MonoBehaviour
-{   
-    public struct Pixel
+public class SDF_Generator : EditorWindow
+{
+    Vector2 scrollPosition;
+
+    struct Pixel
     {
         public float distance;
         public bool edge;
     }
-
-    public int targetSize = 64;
     int m_x_dims;
     int m_y_dims;
     Pixel[] m_pixels;
-    public Texture2D[] Source;
     int samples;
-    public int sampleTimes = 100;
-    public string outputName;
+
+    // 
+    public int targetSize = 256;
+    int sampleTimes = 200;
+    string outputName;
+    [SerializeField]Texture2D[] Sources;
+    SerializedProperty m_Sources;
+    SerializedObject m_object;
+    
+    [MenuItem("Window/SDF Generator")]
+	public static void ShowWindow ()
+	{
+		EditorWindow.GetWindow (typeof(SDF_Generator));
+	}
+
+    private void OnEnable() {
+        ScriptableObject target = this;
+        m_object = new SerializedObject(target);
+        
+    }
+    void OnGUI () 
+	{
+        m_object.Update();
+        m_Sources = m_object.FindProperty("Sources");
+
+        scrollPosition = GUILayout.BeginScrollView(scrollPosition,GUILayout.Width(0),GUILayout.Height(0));
+
+        GUILayout.Space (20);
+        //Body
+        targetSize = EditorGUILayout.IntField("Target Size", targetSize);
+        sampleTimes = EditorGUILayout.IntField("Sample Times", sampleTimes);
+        outputName = EditorGUILayout.TextField("Output Name", outputName);
+
+        GUILayout.Space (10);
+        //Explain
+		GUI.color = Color.yellow;
+		// GUILayout.Label ("SDF_Generator", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("Texture with smaller white area should be on top.", EditorStyles.helpBox);
+        GUI.color = Color.white;
+        EditorGUILayout.PropertyField(m_Sources, true);
+        m_object.ApplyModifiedPropertiesWithoutUndo();
+        GUILayout.Space (20);
+
+        if (GUILayout.Button ("Generate!"))
+            Generate();
+        GUILayout.Space (30);
+
+        GUILayout.EndScrollView();
+	}
 
     public void Generate()
     {
-        SaveTexture(Generator(Source));
+        SaveTexture(Generator(Sources));
     }
     
     void LoadFromTexture(Texture2D texture)
@@ -280,11 +326,11 @@ public class SDF_gen : MonoBehaviour
     void SaveTexture(Texture2D texture)
     {
         byte[] bytes = texture.EncodeToPNG();
-        var dirPath = Application.dataPath.Replace("Assets", "") + AssetDatabase.GetAssetPath(Source[0]).Replace(Source[0].name, outputName);
+        var dirPath = Application.dataPath.Replace("Assets", "") + AssetDatabase.GetAssetPath(Sources[0]).Replace(Sources[0].name, outputName);
         if (outputName == null || outputName == "")
         {
             //if the output name is blank, fill in the name based on the original texture
-            dirPath = Application.dataPath.Replace("Assets", "") + AssetDatabase.GetAssetPath(Source[0]).Replace(Source[0].name, Source[0].name + "_SDFIntrp");
+            dirPath = Application.dataPath.Replace("Assets", "") + AssetDatabase.GetAssetPath(Sources[0]).Replace(Sources[0].name, Sources[0].name + "_SDFIntrp");
         }
         System.IO.File.WriteAllBytes(dirPath, bytes);
         Debug.Log(bytes.Length / 1024 + "Kb was saved as: " + dirPath);
@@ -292,4 +338,5 @@ public class SDF_gen : MonoBehaviour
         UnityEditor.AssetDatabase.Refresh();
         #endif
     }
+
 }

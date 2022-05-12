@@ -123,7 +123,7 @@ public class SDF_Generator : EditorWindow
 
         var dists_temp = new float[source.Length, targetSize*targetSize];
         
-        /// Calculate all the textures and store them for further interpolation
+        // Calculate all the textures and store them for further calculation
         for(int count = 0; count < source.Length; count++)
         {
             samples = (int)sampleTimes/source.Length;
@@ -156,7 +156,7 @@ public class SDF_Generator : EditorWindow
             }
         }
 
-        /// Interpolate using SdF_Interpolation function
+        // Smooth using SdF_Smooth function
         float[] dists_intrp = new float[targetSize*targetSize];
         if (source.Length >= 2)
         {
@@ -168,7 +168,7 @@ public class SDF_Generator : EditorWindow
                     for (int x = 0; x < targetSize; x++)
                     {
                         int i = y * targetSize + x;
-                        dists_intrp[i] += (float)SDF_Interpolation(dists_temp[count, i], dists_temp[count+1, i], new Vector2(1f - (count+1)*gap , 1f - count*gap));
+                        dists_intrp[i] += (float)SDF_Smooth(dists_temp[count, i], dists_temp[count+1, i], new Vector2(1f - (count+1)*gap , 1f - count*gap));
                     }
                 }
             }
@@ -301,9 +301,9 @@ public class SDF_Generator : EditorWindow
         }
     }
 
-    float SDF_Interpolation(float sdfA,float sdfB, Vector2 sdfEdge)
+    float SDF_Smooth(float sdfA,float sdfB, Vector2 sdfEdge)
     {
-        // SDF interpolattion and define threshold
+        // Smooth sdf images and define threshold
         if (sdfA < .5f && sdfB < .5f)
         {
             return 0f;
@@ -315,13 +315,26 @@ public class SDF_Generator : EditorWindow
         }
 
         float result = 0;
-        for (int i = 0; i < samples; i++)
+        if (samples > 0)
         {
-            float t = (float)i/samples; // (float) is needed
-            result += Mathf.Lerp(sdfA, sdfB, t) < .5f? sdfEdge.x : sdfEdge.y;
+            for (int i = 0; i < samples; i++)
+            {
+                float t = (float)i/samples; // (float) is needed
+                result += Mathf.Lerp(sdfA, sdfB, t) < .5f? sdfEdge.x : sdfEdge.y;
+            }
+            return result / samples;
         }
-
-        return result / samples;
+        
+        float ratio = (sdfA - 0.5f) / (sdfA - sdfB);
+        if (sdfA > sdfB)
+        {
+            result = sdfEdge.y * ratio + sdfEdge.x * (1f - ratio);
+        }
+        else
+        {
+            result = sdfEdge.x * ratio + sdfEdge.y * (1f - ratio);
+        }
+        return result;
     }
     void SaveTexture(Texture2D texture)
     {

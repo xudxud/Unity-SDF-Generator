@@ -38,3 +38,12 @@ Drag `SDF_Generator.cs` anywhere you want.
     <img width="420" src="https://github.com/clarkxdy/Common/blob/main/b/images/img_SDF-Generator/face_source.png?raw=true">
   </p>
 
+
+
+Ref:
+
+>http://www.codersnotes.com/notes/signed-distance-fields/
+>
+>https://shaderfun.com
+>
+>https://zhuanlan.zhihu.com/p/337944099

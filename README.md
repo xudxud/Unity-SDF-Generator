@@ -2,20 +2,39 @@
 
 
 
-> Unity SDF generator and SDFs interpolation
-
-<p align="center">
-  <img width="322" src="images/sdfGenerator_editorWindow.png">
-</p>
-
-<h2><em>How to use</em></h2>
-
-Drag the `SDF_Generator.cs` anywhere you want.
-
- And then you can find it here: ***Windows  > SDF Generator***
-
-
+> Unity SDF generator and SDFs smooth
 
 <h2><em>Demo</em></h2>
 
-WIP ... ...
+<p align="center">
+  <img width="286" src="https://raw.githubusercontent.com/clarkxdy/Common/main/b/images/img_SDF-Generator/face_preview.gif">
+</p>
+
+
+
+
+<h2><em>How to use</em></h2>
+
+Drag `SDF_Generator.cs` anywhere you want.
+
+ And then you can find it here: ***Windows  > SDF Generator***
+
+- Drag all the textures to `Sources`. Remember to set the textures to `Read/Write`.
+- If `samples` is `0`, you will get a completely smooth output, otherwise the output is posterized according to the `samples`. 
+
+- Texture with smaller white area should be on top.
+
+<p align="center">
+  <img width="286" src="https://raw.githubusercontent.com/clarkxdy/Common/main/b/images/img_SDF-Generator/sdfGenerator_editorWindow.png">
+</p>
+
+
+
+- I drew some pictures for this tool, if you are interested, you can find them here:  `images/Demo_0/`
+
+  Try it and have fun !
+
+  <p align="center">
+    <img width="420" src="https://github.com/clarkxdy/Common/blob/main/b/images/img_SDF-Generator/face_source.png?raw=true">
+  </p>
+

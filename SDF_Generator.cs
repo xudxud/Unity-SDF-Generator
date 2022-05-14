@@ -24,11 +24,13 @@ public class SDF_Generator : EditorWindow
 
     // 
     public int targetSize = 256;
-    int sampleTimes = 200;
+    int sampleTimes = 0;
     string outputName;
     [SerializeField]Texture2D[] Sources;
     SerializedProperty m_Sources;
     SerializedObject m_object;
+    //
+
     
     [MenuItem("Window/SDF Generator")]
 	public static void ShowWindow ()
@@ -50,16 +52,21 @@ public class SDF_Generator : EditorWindow
 
         GUILayout.Space (20);
         //Body
-        targetSize = EditorGUILayout.IntField("Target Size", targetSize);
-        sampleTimes = EditorGUILayout.IntField("Sample Times", sampleTimes);
         outputName = EditorGUILayout.TextField("Output Name", outputName);
+        targetSize = EditorGUILayout.IntField("Target Size", targetSize);
+        // samples - posterize
+        
+        GUI.color = Color.cyan;
+        sampleTimes = EditorGUILayout.IntField(sampleTimes>0?"Samples (Posterize)":"Samples (Smooth)", sampleTimes<0? 0:sampleTimes);
+        
 
         GUILayout.Space (10);
         //Explain
 		GUI.color = Color.yellow;
-		// GUILayout.Label ("SDF_Generator", EditorStyles.boldLabel);
-        EditorGUILayout.LabelField("Texture with smaller white area should be on top.", EditorStyles.helpBox);
+
+        EditorGUILayout.LabelField("● Texture with smaller white area should be on top.", EditorStyles.helpBox);
         GUI.color = Color.white;
+        //input textures
         EditorGUILayout.PropertyField(m_Sources, true);
         m_object.ApplyModifiedPropertiesWithoutUndo();
         GUILayout.Space (20);
@@ -123,7 +130,7 @@ public class SDF_Generator : EditorWindow
 
         var dists_temp = new float[source.Length, targetSize*targetSize];
         
-        // Calculate all the textures and store them for further calculation
+        // Calculate all the textures and store the results for further calculation
         for(int count = 0; count < source.Length; count++)
         {
             samples = (int)sampleTimes/source.Length;
@@ -150,7 +157,7 @@ public class SDF_Generator : EditorWindow
                     dist = Mathf.InverseLerp(0f, 255f, dist);
                     dists_temp[count, i] = dist;
                     
-                    // One SDF without interpolation
+                    // One SDF without smooth
                     if (source.Length == 1) pixels_out[i] = new Color(dist, dist, dist, 1f);
                 }
             }
@@ -343,7 +350,7 @@ public class SDF_Generator : EditorWindow
         if (outputName == null || outputName == "")
         {
             //if the output name is blank, fill in the name based on the original texture
-            dirPath = Application.dataPath.Replace("Assets", "") + AssetDatabase.GetAssetPath(Sources[0]).Replace(Sources[0].name, Sources[0].name + "_SDFIntrp");
+            dirPath = Application.dataPath.Replace("Assets", "") + AssetDatabase.GetAssetPath(Sources[0]).Replace(Sources[0].name, Sources[0].name + "_OUT");
         }
         System.IO.File.WriteAllBytes(dirPath, bytes);
         Debug.Log(bytes.Length / 1024 + "Kb was saved as: " + dirPath);

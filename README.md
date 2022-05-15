@@ -30,7 +30,7 @@ Drag `SDF_Generator.cs` anywhere you want.
 
 
 
-- I drew some pictures for this tool, if you are interested, you can find them here:  `images/Demo_0/`
+- I drew some pictures for this tool, if you are interested, you can find them here:  `images/Demo/`
 
   Try it and have fun !
 

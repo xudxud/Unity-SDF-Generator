@@ -47,3 +47,9 @@ Ref:
 >https://shaderfun.com
 >
 >https://zhuanlan.zhihu.com/p/337944099
+
+
+### Todo
+
+- [ ] Compute shader version
+- [x] Add editor

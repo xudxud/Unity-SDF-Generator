@@ -12,7 +12,6 @@
 
 
 
-
 <h2><em>How to use</em></h2>
 
 Drag `SDF_Generator.cs` anywhere you want.
@@ -40,16 +39,17 @@ Drag `SDF_Generator.cs` anywhere you want.
 
 
 
-Ref:
+### Todo
+
+- [ ] Compute shader based version
+- [ ] Shader based version
+- [x] Add editor
+> ⚠️  RWTexture2D or  RWTexture2DArray doesn't work in Editor Mode ?
+
+Ref: 
 
 >http://www.codersnotes.com/notes/signed-distance-fields/
 >
 >https://shaderfun.com
 >
 >https://zhuanlan.zhihu.com/p/337944099
-
-
-### Todo
-
-- [ ] Compute shader version
-- [x] Add editor
